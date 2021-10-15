@@ -1,0 +1,28 @@
+<div class="container-fluid header" style="background-color:#0d6efd;">
+    <div class="btn-group">
+        <!-- if문 써서 현재버튼 해놓긴했는데 이게맞는지 모르겠음 -->
+        
+            <a href="#" class="btn btn-primary">홈</a>
+
+            <!-- 상품수집 -->
+        {% if request.path == '/crawling/' %}
+            <a href="{% url 'crawling:index' %}" class="btn btn-primary active aria-current=">상품 수집</a>
+        {% else %}
+            <a href="{% url 'crawling:index' %}" class="btn btn-primary">상품 수집</a>
+        {% endif %}
+        
+        <!-- 상품관리 -->
+        {% if request.path == "/manage/" %}
+            <a href="{% url 'manage:index' %}" class="btn btn-primary active aria-current=">상품 관리</a>
+        {% else %}
+            <a href="{% url 'manage:index' %}" class="btn btn-primary">상품 관리</a>
+        {% endif %}
+        
+        <!-- 업데이트 -->
+        {% if request.path == '/update/' %}
+            <a href="{% url 'update:index' %}" class="btn btn-primary active aria-current=">업데이트</a>
+        {% else %}
+            <a href="{% url 'update:index' %}" class="btn btn-primary">업데이트</a>
+        {% endif %}
+    </div>
+</div>
