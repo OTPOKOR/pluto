@@ -77,4 +77,6 @@ def nationalSearchAll(url):
     
     return (context)
     
+# 내셔널 디테일 크롤링
+
 # 내셔널지오그래픽 크롤링 끝
