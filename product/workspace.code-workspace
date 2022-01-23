@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "..\\.."
+		},
+		{
+			"path": "..\\..\\..\\fast_campus"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "pluto"
+	}
+}

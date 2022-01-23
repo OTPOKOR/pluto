@@ -1,5 +1,6 @@
 from django.db import models
-import json
+from django.contrib.postgres.fields import ArrayField
+
 # Create your models here.
 class Product (models.Model):
 
@@ -13,14 +14,7 @@ class Product (models.Model):
     product_name=models.TextField()
     stock=models.BooleanField()
     price=models.IntegerField()
-    shipping_price=models.IntegerField()
+    shipping_price=models.IntegerField(null=True)
     weight=models.TextField(blank=True)
     volume=models.TextField(blank=True)
-    option=models.TextField()
-    # 옵션 json 으로 만들기
-    
-    def set_option(self, x):
-        self.option = json.dumps(x)
-        
-    def get_option(self,x):
-        return json.loads(self.option)
+    option=ArrayField(models.CharField(max_length=200,blank=True),size=100)
