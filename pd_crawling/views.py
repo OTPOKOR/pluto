@@ -1,10 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import *
 from .crawling import *
-
-# numpy를 이용해서 POST 배열 정상작동시켜보기
-import numpy as np
-import json
+from .crawling_site.national import *
 
 def index(request):
     """
@@ -40,5 +37,5 @@ def SaveProduct(request):
     form = Searchform()
     data = request.POST
     test = data.getlist('test_url',default=None)
-    print(test)
+    national_save(test)
     return render(request,'crawling/index.html',{'form':form})

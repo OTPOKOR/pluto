@@ -48,11 +48,8 @@ chrome = webdriver.Chrome(r"C:\Users\wldnj\Desktop\pluto\test\chromedriver.exe",
 wait = WebDriverWait(chrome,10)
 
 # 내셔널지오그래픽 urls 테스트용
-urls = ['https://www.naturestore.co.kr//goods/goods_viewphp?goodsNo=1000005555', 'https://www.naturestore.co.kr//goods/goods_viewphp?goodsNo=1000000388','https://www.naturestore.co.kr//goods/goods_viewphp?goodsNo=1000006335']
+urls = ['https://www.naturestore.co.kr//goods/goods_viewphp?goodsNo=1000005555', 'https://www.naturestore.co.kr//goods/goods_viewphp?goodsNo=1000000388','https://www.naturestore.co.kr//goods/goods_viewphp?goodsNo=1000006335','https://www.naturestore.co.kr//goods/goods_viewphp?goodsNo=1000005556','https://www.naturestore.co.kr/goods/goods_viewphp?goodsNo=1000006407']
 
-
-def find_visible(css):
-    return wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR,css)))
 
 for url in urls:
 
@@ -68,6 +65,8 @@ for url in urls:
     # BeatifulSoup로 페이지보냄
     res = chrome.page_source
     soup = BS(res,'html.parser')
+
+    # 상품정보 추출
     상품이름 = soup.select_one('#frmView > div > div > div.item_detail_tit > h3').text
     상품번호 = soup.select_one('#frmView > div > div > div.item_detail_list > dl:nth-child(3) > dd').text
     식별번호 = goodsNo
@@ -81,11 +80,8 @@ for url in urls:
     imgUrl = soup.select_one('#contents > div > div:nth-child(8) > div.item_photo_info_sec > div > div > div.item_photo_slide > ul > div > div > li.slick-slide.slick-current.slick-active > a > img')['src']
     url_base = 'https://www.naturestore.co.kr'
     linkImg = url_base + imgUrl
-    path = "D:/DB/IMG/NationalGeographic/"+상품번호
-    # 경로저장
-    os.mkdir(path)
-    # 이미지 저장
-    urllib.request.urlretrieve(linkImg,path+"/01.jpg")
+    path = "D:/DB/IMG/"+상품번호
+
     
     # 
     # 재고
@@ -105,9 +101,15 @@ for url in urls:
         else:
             옵션.append(test)
             
-            
-    print(f'상품이름 : {상품이름}\n모델명 : {상품번호}\n식별번호 : {식별번호}\n 사이트이름 : {사이트이름} \n 등록날짜 : {등록날짜} \n 사이트주소 : {사이트주소}\n브랜드이름 : {브랜드이름} \n 재고 : {재고} \n 가격 : {가격}원 \n옵션 : {옵션}')
-    # Product.objects.create(product_name = 상품이름,product_number = 상품번호,identy_number = 식별번호,site = 사이트이름,regist_date =등록날짜,product_url = 사이트주소,brand = 브랜드이름,stock = 재고,price = 가격,shipping_price = NULL,update_date = 업데이트날짜,option = 옵션)
+    if Product.objects.filter(product_url=사이트주소):
+        print(f'{상품이름}은 등록 되어있는 상품입니다')
+    else:
+        # 경로저장
+        os.mkdir(path)
+        # 이미지 저장
+        urllib.request.urlretrieve(linkImg,path+"/01.jpg")
+        print(f'상품이름 : {상품이름}\n상품번호 : {상품번호}\n식별번호 : {식별번호}\n 사이트이름 : {사이트이름} \n 등록날짜 : {등록날짜} \n 사이트주소 : {사이트주소}\n브랜드이름 : {브랜드이름} \n 재고 : {재고} \n 가격 : {가격}원 \n옵션 : {옵션}')
+        Product.objects.create(product_name = 상품이름,product_number = 상품번호,identy_number = 식별번호,site = 사이트이름,regist_date =등록날짜,product_url = 사이트주소,brand = 브랜드이름,stock = 재고,price = 가격,shipping_price = NULL,update_date = 업데이트날짜,option = 옵션)
     
     # 사이트접속
     
