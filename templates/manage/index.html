@@ -3,24 +3,26 @@
 <!-- container -->
 <!-- 검색창 -->
 <div class="p-2" style="background-color:rgb(211, 211, 211)">
+    <form action="{% url 'manage:search' %}" method="GET" >
+        {% csrf_token %}
+        <!-- {{form.as_p}} -->
 
-    <form action="">
         <!-- 사이트선택 -->
 
         <div>
             <span class="fw-bold me-1">사이트선택</span>
             <div class="form-check form-check-inline">
 
-                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="사이트" value="내셔널지오그래픽">
                 <label class="form-check-label" for="inlineCheckbox1">내셔널지오그래픽</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="사이트" value="코닥">
                 <label class="form-check-label" for="inlineCheckbox2">코닥</label>
             </div>
 
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="사이트" value="네이버스토어팜">
                 <label class="form-check-label" for="inlineCheckbox2">네이버스토어팜</label>
             </div>
         </div>
@@ -28,16 +30,16 @@
         <span class="fw-bold me-5 ">상태</span>
         <div class="form-check form-check-inline">
 
-            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+            <input class="form-check-input" type="radio" id="inlineCheckbox1" name="재고" value="전체" checked="checked" >
             <label class="form-check-label" for="inlineCheckbox1">전체</label>
         </div>
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+            <input class="form-check-input" type="radio" id="inlineCheckbox2" name="재고" value="재고">
             <label class="form-check-label" for="inlineCheckbox2">재고</label>
         </div>
 
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+            <input class="form-check-input" type="radio" id="inlineCheckbox2" name="재고" value="품절">
             <label class="form-check-label" for="inlineCheckbox2">품절</label>
         </div>
 
@@ -45,20 +47,22 @@
         <div class="justify-content-center">
             <div class="input-group mb-3 mt-2 ">
                 <span class="me-3 fw-bold">상품검색</span>
-                <!-- 항목검색 -->
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">전체</button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">제품이름</a></li>
-                    <li><a class="dropdown-item" href="#">상품번호</a></li>
-                    <li><a class="dropdown-item" href="#">식별번호</a></li>
-                </ul>
+
+                <select class="form-select form-control" data-bs-toggle="dropdown"  aria-label="Default select example" aria-expanded="false" style="width:20px">
+                    <option selected>전체검색</option>
+                    <option value="식별번호">식별번호</option>
+                    <option value="상품번호">상품번호</option>
+                    <option value="제품이름">제품이름</option>
+                  </select>
+
                 <!-- 검색바 -->
-                <input type="text" class="form-control" placeholder="상품검색" aria-label="Recipient's username" aria-describedby="button-addon2">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon2">검색</button>
+                <input type="text" class="form-control" placeholder="상품검색" aria-label="Recipient's username" aria-describedby="button-addon2" style="width:75%" name="search">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2" >검색</button>
             </div>
         </div>
     </form>
 </div>
+<!-- 검색창 종료 -->
 <!-- container -->
 <div class="p-3">
     <!-- 전체선택창 -->
