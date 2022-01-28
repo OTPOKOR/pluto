@@ -48,7 +48,7 @@
             <div class="input-group mb-3 mt-2 ">
                 <span class="me-3 fw-bold">상품검색</span>
 
-                <select class="form-select form-control" data-bs-toggle="dropdown"  aria-label="Default select example" aria-expanded="false" style="width:20px">
+                <select class="form-select form-control" data-bs-toggle="dropdown"  aria-label="Default select example" aria-expanded="false" style="width:20px" name="검색조건">
                     <option selected>전체검색</option>
                     <option value="식별번호">식별번호</option>
                     <option value="상품번호">상품번호</option>
@@ -172,17 +172,44 @@
 </div>
 
 
-<!-- 페이지넘김 -->
+<!-- 페이징 처리 시작 -->
 <div style="text-align:center">
     <div class="btn-group me-2 " role="group" aria-label="First group">
-        <button type="button" class="btn btn-outline-secondary">
-        </button> <button type="button" class="btn btn-outline-secondary">1
-        </button>
-        <button type="button" class="btn btn-outline-secondary">2</button>
-        <button type="button" class="btn btn-outline-secondary">3</button>
-        <button type="button" class="btn btn-outline-secondary">4</button>
-        <button type="button" class="btn btn-outline-secondary">...</button>
-        <button type="button" class="btn btn-outline-secondary">></button>
+        <!-- 이전페이지 -->
+        {% if product_list.has_previous %}
+        <li class="page-item" style="list-style:none;">
+            <a class="page-link" href="?사이트={{request.GET.사이트}}&재고={{request.GET.재고}}&검색조건={{request.GET.검색조건}}&search={{request.GET.search}}&page={{ product_list.previous_page_number }}"><</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled" style="list-style:none;">
+            <a class="page-link" tabindex="-1" aria-disabled="True" href="#"><</a>
+        </li>
+        {% endif %}
+        <!-- 페이지 리스트 -->
+        {% for page_number in product_list.paginator.page_range %}
+        {% if page_number >= product_list.number|add:-5 and page_number <= product_list.number|add:5 %}
+            {% if page_number == product_list.number %}
+            <li class="page-item active" aria-current="page" style="list-style:none;" >
+                <a class="page-link" href="?사이트={{request.GET.사이트}}&재고={{request.GET.재고}}&검색조건={{request.GET.검색조건}}&search={{request.GET.search}}&page={{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% else %}
+            <li class="page-item" style="list-style:none;" >
+            <a class="page-link" href="?사이트={{request.GET.사이트}}&재고={{request.GET.재고}}&검색조건={{request.GET.검색조건}}&search={{request.GET.search}}&page={{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% endif %}
+        {% endif %}
+        {% endfor %}
+        <!-- 다음페이지 -->
+        {% if product_list.has_next %}
+        <li class="page-item" style="list-style:none;" >
+            <a class="page-link" href="?사이트={{request.GET.사이트}}&재고={{request.GET.재고}}&검색조건={{request.GET.검색조건}}&search={{request.GET.search}}&page={{ product_list.next_page_number }}">></a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"style="list-style:none;" >
+            <a class="page-link" tabindex="-1" aria-disabled="True" href="#">></a>
+        </li>
+        {% endif %}
     </div>
-</div>
+<!-- 페이징 처리 끝 -->
+</div> 
 {% endblock %}
