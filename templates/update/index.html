@@ -2,64 +2,66 @@
 {% block content %}
     <!-- 검색창 -->
     <div class="p-2" style="background-color:rgb(211, 211, 211)">
-
-        <form action="">
+        <form action="{% url 'update:search' %}" method="GET" >
+            {% csrf_token %}
+            <!-- {{form.as_p}} -->
+    
             <!-- 사이트선택 -->
-
+    
             <div>
                 <span class="fw-bold me-1">사이트선택</span>
                 <div class="form-check form-check-inline">
-
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+    
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="사이트" value="내셔널지오그래픽" checked="checked">
                     <label class="form-check-label" for="inlineCheckbox1">내셔널지오그래픽</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="사이트" value="코닥" checked="checked" >
                     <label class="form-check-label" for="inlineCheckbox2">코닥</label>
                 </div>
-
+    
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="사이트" value="네이버스토어팜" checked="checked" >
                     <label class="form-check-label" for="inlineCheckbox2">네이버스토어팜</label>
                 </div>
             </div>
             <!-- 상태창 -->
             <span class="fw-bold me-5 ">상태</span>
             <div class="form-check form-check-inline">
-
-                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+    
+                <input class="form-check-input" type="radio" id="inlineCheckbox1" name="재고" value="전체" checked="checked" >
                 <label class="form-check-label" for="inlineCheckbox1">전체</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                <input class="form-check-input" type="radio" id="inlineCheckbox2" name="재고" value="재고">
                 <label class="form-check-label" for="inlineCheckbox2">재고</label>
             </div>
-
+    
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                <input class="form-check-input" type="radio" id="inlineCheckbox2" name="재고" value="품절">
                 <label class="form-check-label" for="inlineCheckbox2">품절</label>
             </div>
-
+    
             <!-- 검색창 -->
             <div class="justify-content-center">
                 <div class="input-group mb-3 mt-2 ">
                     <span class="me-3 fw-bold">상품검색</span>
-                    <!-- 항목검색 -->
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">전체</button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">제품이름</a></li>
-                        <li><a class="dropdown-item" href="#">상품번호</a></li>
-                        <li><a class="dropdown-item" href="#">식별번호</a></li>
-                    </ul>
+    
+                    <select class="form-select form-control" data-bs-toggle="dropdown"  aria-label="Default select example" aria-expanded="false" style="width:20px" name="검색조건">
+                        <option selected>전체검색</option>
+                        <option value="식별번호">식별번호</option>
+                        <option value="상품번호">상품번호</option>
+                        <option value="제품이름">제품이름</option>
+                      </select>
+    
                     <!-- 검색바 -->
-                    <input type="text" class="form-control" placeholder="상품검색" aria-label="Recipient's username"
-                        aria-describedby="button-addon2">
-                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">검색</button>
+                    <input type="text" class="form-control" placeholder="상품검색" aria-label="Recipient's username" aria-describedby="button-addon2" style="width:75%" name="search">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2" >검색</button>
                 </div>
             </div>
         </form>
     </div>
+    <!-- 검색창 종료 -->
     <!-- 로그 -->
     <div class="border m-3" style="height:150px; overflow:scroll; height:130px;">
         <p>(5/100) 상품업데이트중입니다..</p>
@@ -79,31 +81,31 @@
         <!-- 상품 -->
         <div>
             <!-- 개별상품 -->
+            {% for product in product_list %}
             <table class="pdTable" style="width:100%">
                 <tbody>
                     <!-- 번호 -->
                     <td style="background-color:rgb(224, 224, 224)">
                         <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
                         <span class="badge bg-secondary me-1">No.</span>
-                        <span>000001</span>
+                        <span>{{ product.id }}</span>
                     </td>
                     <!-- 날짜,식별,상품 -->
                     <td style="background-color:rgb(224, 224, 224)">
 
-                        <span class="badge bg-secondary ms-3">사이트 </span><span>내셔널지오그래픽</span>
-                        <span class="badge bg-secondary ms-3">브랜드 </span><span>내셔널지오그래픽</span>
-                        <span class="badge bg-secondary ms-3">식별번호</span><span>394329EFD</span>
-                        <span class="badge bg-secondary ms-3">상품번호</span><span>AB395D8E</span>
-                        <span class="badge bg-secondary ms-3">등록날짜</span><span>2021-09-16</span>
-                        <span class="badge bg-secondary ms-3">업데이트날짜</span><span>2021-09-16</span>
+                        <span class="badge bg-secondary ms-3">사이트 </span><span>{{product.site}}</span>
+                        <span class="badge bg-secondary ms-3">브랜드 </span><span>{{product.brand}}</span>
+                        <span class="badge bg-secondary ms-3">식별번호</span><span>{{product.identy_number}}</span>
+                        <span class="badge bg-secondary ms-3">상품번호</span><span>{{product.product_number}}</span>
+                        <span class="badge bg-secondary ms-3">등록날짜</span><span>{{product.regist_date}}</span>
+                        <span class="badge bg-secondary ms-3">업데이트날짜</span><span>{{product.update_date}}</span>
                     </td>
                 </tbody>
                 <tbody>
                     <table style="width:100%">
                         <tr>
-                            <td>
-                                <span class="ms-4">내셔널지오그래픽 N214UDW920 헤론 라이트 덕 U넥
-                                    다운 점퍼 CARBON BLACK</span>
+                            <td style= "padding-top: 10px; padding-bottom: 10px;">
+                                <span class="ms-4">{{product.product_name}}</span>
                             </td>
                         </tr>
                     </table>
@@ -111,6 +113,7 @@
                 </tbody>
 
             </table>
+            {% endfor %}
 
 
         </div>
@@ -118,17 +121,43 @@
     </div>
 
 
-    <!-- 페이지넘김 -->
-    <div style="text-align:center">
-        <div class="btn-group me-2 " role="group" aria-label="First group">
-            <button type="button" class="btn btn-outline-secondary">
-            </button> <button type="button" class="btn btn-outline-secondary">1
-            </button>
-            <button type="button" class="btn btn-outline-secondary">2</button>
-            <button type="button" class="btn btn-outline-secondary">3</button>
-            <button type="button" class="btn btn-outline-secondary">4</button>
-            <button type="button" class="btn btn-outline-secondary">...</button>
-            <button type="button" class="btn btn-outline-secondary">></button>
-        </div>
+<!-- 페이징 처리 시작 -->
+<div style="text-align:center">
+    <div class="btn-group me-2 " role="group" aria-label="First group">
+        <!-- 이전페이지 -->
+        {% if product_list.has_previous %}
+        <li class="page-item" style="list-style:none;">
+            <a class="page-link" href="?재고={{request.GET.재고}}&검색조건={{request.GET.검색조건}}&search={{request.GET.search}}&page={{ product_list.previous_page_number }}"><</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled" style="list-style:none;">
+            <a class="page-link" tabindex="-1" aria-disabled="True" href="#"><</a>
+        </li>
+        {% endif %}
+        <!-- 페이지 리스트 -->
+        {% for page_number in product_list.paginator.page_range %}
+        {% if page_number >= product_list.number|add:-5 and page_number <= product_list.number|add:5 %}
+            {% if page_number == product_list.number %}
+            <li class="page-item active" aria-current="page" style="list-style:none;" >
+                <a class="page-link" href="?재고={{request.GET.재고}}&검색조건={{request.GET.검색조건}}&search={{request.GET.search}}&page={{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% else %}
+            <li class="page-item" style="list-style:none;" >
+            <a class="page-link" href="?재고={{request.GET.재고}}&검색조건={{request.GET.검색조건}}&search={{request.GET.search}}&page={{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% endif %}
+        {% endif %}
+        {% endfor %}
+        <!-- 다음페이지 -->
+        {% if product_list.has_next %}
+        <li class="page-item" style="list-style:none;" >
+            <a class="page-link" href="?재고={{request.GET.재고}}&검색조건={{request.GET.검색조건}}&search={{request.GET.search}}&page={{ product_list.next_page_number }}">></a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"style="list-style:none;" >
+            <a class="page-link" tabindex="-1" aria-disabled="True" href="#">></a>
+        </li>
+        {% endif %}
     </div>
+<!-- 페이징 처리 끝 -->
 {% endblock %}

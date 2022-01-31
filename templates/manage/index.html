@@ -3,65 +3,78 @@
 <!-- container -->
 <!-- 검색창 -->
 <div class="p-2" style="background-color:rgb(211, 211, 211)">
-    <form action="{% url 'manage:search' %}" method="GET" >
-        {% csrf_token %}
         <!-- {{form.as_p}} -->
-
-        <!-- 사이트선택 -->
-
-        <div>
-            <span class="fw-bold me-1">사이트선택</span>
+        <form action="{% url 'manage:search' %}" method="GET" >
+            {% csrf_token %}
+            <!-- {{form.as_p}} -->
+    
+            <!-- 사이트선택 -->
+    
+            <div>
+                <span class="fw-bold me-1">사이트선택</span>
+                <div class="form-check form-check-inline">
+    
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="사이트" value="내셔널지오그래픽" checked="checked">
+                    <label class="form-check-label" for="inlineCheckbox1">내셔널지오그래픽</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="사이트" value="코닥" checked="checked" >
+                    <label class="form-check-label" for="inlineCheckbox2">코닥</label>
+                </div>
+    
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="사이트" value="네이버스토어팜" checked="checked" >
+                    <label class="form-check-label" for="inlineCheckbox2">네이버스토어팜</label>
+                </div>
+            </div>
+            <!-- 상태창 -->
+            <span class="fw-bold me-5 ">상태</span>
             <div class="form-check form-check-inline">
-
-                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="사이트" value="내셔널지오그래픽">
-                <label class="form-check-label" for="inlineCheckbox1">내셔널지오그래픽</label>
+    
+                <input class="form-check-input" type="radio" id="inlineCheckbox1" name="재고" value="전체" checked="checked" >
+                <label class="form-check-label" for="inlineCheckbox1">전체</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="사이트" value="코닥">
-                <label class="form-check-label" for="inlineCheckbox2">코닥</label>
+                <input class="form-check-input" type="radio" id="inlineCheckbox2" name="재고" value="재고">
+                <label class="form-check-label" for="inlineCheckbox2">재고</label>
             </div>
-
+    
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="사이트" value="네이버스토어팜">
-                <label class="form-check-label" for="inlineCheckbox2">네이버스토어팜</label>
+                <input class="form-check-input" type="radio" id="inlineCheckbox2" name="재고" value="품절">
+                <label class="form-check-label" for="inlineCheckbox2">품절</label>
             </div>
-        </div>
-        <!-- 상태창 -->
-        <span class="fw-bold me-5 ">상태</span>
-        <div class="form-check form-check-inline">
-
-            <input class="form-check-input" type="radio" id="inlineCheckbox1" name="재고" value="전체" checked="checked" >
-            <label class="form-check-label" for="inlineCheckbox1">전체</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="inlineCheckbox2" name="재고" value="재고">
-            <label class="form-check-label" for="inlineCheckbox2">재고</label>
-        </div>
-
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="inlineCheckbox2" name="재고" value="품절">
-            <label class="form-check-label" for="inlineCheckbox2">품절</label>
-        </div>
-
-        <!-- 검색창 -->
-        <div class="justify-content-center">
-            <div class="input-group mb-3 mt-2 ">
-                <span class="me-3 fw-bold">상품검색</span>
-
-                <select class="form-select form-control" data-bs-toggle="dropdown"  aria-label="Default select example" aria-expanded="false" style="width:20px" name="검색조건">
-                    <option selected>전체검색</option>
-                    <option value="식별번호">식별번호</option>
-                    <option value="상품번호">상품번호</option>
-                    <option value="제품이름">제품이름</option>
-                  </select>
-
-                <!-- 검색바 -->
-                <input type="text" class="form-control" placeholder="상품검색" aria-label="Recipient's username" aria-describedby="button-addon2" style="width:75%" name="search">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2" >검색</button>
+    
+            <!-- 검색창 -->
+            <div class="justify-content-center">
+                <div class="input-group mb-3 mt-2 ">
+                    <span class="me-3 fw-bold">상품검색</span>
+    
+                    <select class="form-select form-control" data-bs-toggle="dropdown"  aria-label="Default select example" aria-expanded="false" style="width:20px" name="검색조건">
+                        <option selected>전체검색</option>
+                        <option value="식별번호">식별번호</option>
+                        <option value="상품번호">상품번호</option>
+                        <option value="제품이름">제품이름</option>
+                      </select>
+    
+                    <!-- 검색바 -->
+                    <input type="text" class="form-control" placeholder="상품검색" aria-label="Recipient's username" aria-describedby="button-addon2" style="width:75%" name="search">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2" >검색</button>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
 </div>
+<!-- /////////////////////////////////////////////////////////////////////////////////////// 히든 서치 폼 ///////////////////////////////////////////////////////////////////////////////////////-->
+
+<form id="searchForm" method="get" action="{% url 'manage:search' %}">
+    <input type="hidden" id="search" name="search" value="{{ save_page.search|default_if_none:'' }}">
+    <input type="hidden" id="site1" name="사이트" value= "{{save_page.site_choice_list.사이트1}}">
+    <input type="hidden" id="site2" name="사이트" value= "{{save_page.site_choice_list.사이트2}}">
+    <input type="hidden" id="site3" name="사이트" value= "{{save_page.site_choice_list.사이트3}}">
+    <input type="hidden" id="stock" name="재고" value= "{{save_page.재고}}">
+    <input type="hidden" id="page" name="page" value="{{ save_page.page }}">
+    <input type="hidden" id="search_condition" name="검색조건" value="{{ save_page.검색조건 }}">
+</form>
+
 <!-- 검색창 종료 -->
 <!-- container -->
 <div class="p-3">
@@ -168,48 +181,62 @@
 <!-- 상품리스트끝 -->
 </ul>
 </div>
-
 </div>
 
 
 <!-- 페이징 처리 시작 -->
-<div style="text-align:center">
-    <div class="btn-group me-2 " role="group" aria-label="First group">
-        <!-- 이전페이지 -->
-        {% if product_list.has_previous %}
-        <li class="page-item" style="list-style:none;">
-            <a class="page-link" href="?사이트={{request.GET.사이트}}&재고={{request.GET.재고}}&검색조건={{request.GET.검색조건}}&search={{request.GET.search}}&page={{ product_list.previous_page_number }}"><</a>
+<ul class="pagination justify-content-center">
+    <!-- 이전페이지 -->
+    {% if product_list.has_previous %}
+    <li class="page-item">
+        <a class="page-link" data-page="{{ product_list.previous_page_number }}" href="#">이전</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+    </li>
+    {% endif %}
+    <!-- 페이지리스트 -->
+    {% for page_number in product_list.paginator.page_range %}
+    {% if product_list.number|add:-5 <= page_number <= product_list.number|add:5 %}
+        {% if page_number == product_list.number %}
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" data-page="{{ page_number }}" href="#">{{ page_number }}</a>
         </li>
         {% else %}
-        <li class="page-item disabled" style="list-style:none;">
-            <a class="page-link" tabindex="-1" aria-disabled="True" href="#"><</a>
+        <li class="page-item">
+            <a class="page-link" data-page="{{ page_number }}" href="#">{{ page_number }}</a>
         </li>
         {% endif %}
-        <!-- 페이지 리스트 -->
-        {% for page_number in product_list.paginator.page_range %}
-        {% if page_number >= product_list.number|add:-5 and page_number <= product_list.number|add:5 %}
-            {% if page_number == product_list.number %}
-            <li class="page-item active" aria-current="page" style="list-style:none;" >
-                <a class="page-link" href="?사이트={{request.GET.사이트}}&재고={{request.GET.재고}}&검색조건={{request.GET.검색조건}}&search={{request.GET.search}}&page={{ page_number }}">{{ page_number }}</a>
-            </li>
-            {% else %}
-            <li class="page-item" style="list-style:none;" >
-            <a class="page-link" href="?사이트={{request.GET.사이트}}&재고={{request.GET.재고}}&검색조건={{request.GET.검색조건}}&search={{request.GET.search}}&page={{ page_number }}">{{ page_number }}</a>
-            </li>
-            {% endif %}
-        {% endif %}
-        {% endfor %}
-        <!-- 다음페이지 -->
-        {% if product_list.has_next %}
-        <li class="page-item" style="list-style:none;" >
-            <a class="page-link" href="?사이트={{request.GET.사이트}}&재고={{request.GET.재고}}&검색조건={{request.GET.검색조건}}&search={{request.GET.search}}&page={{ product_list.next_page_number }}">></a>
-        </li>
-        {% else %}
-        <li class="page-item disabled"style="list-style:none;" >
-            <a class="page-link" tabindex="-1" aria-disabled="True" href="#">></a>
-        </li>
-        {% endif %}
-    </div>
+    {% endif %}
+    {% endfor %}
+    <!-- 다음페이지 -->
+    {% if product_list.has_next %}
+    <li class="page-item">
+        <a class="page-link" data-page="{{ product_list.next_page_number }}" href="#">다음</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+    </li>
+    {% endif %}
+</ul>
 <!-- 페이징 처리 끝 -->
 </div> 
+
+{% block javascripts %}
+<script type='text/javascript'>
+$(document).ready(function(){
+    $(".page-link").on('click', function() {
+        $("#page").val($(this).data("page"));
+        $("#searchForm").submit();
+    });
+
+});
+</script>
 {% endblock %}
+
+
+{% endblock %}
+
+
