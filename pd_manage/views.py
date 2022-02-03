@@ -14,7 +14,6 @@ def index(request):
     """
     목록출력
     """
-    # form = ProductSearch()'form':form
     product_list = Product.objects.order_by('-regist_date')
     # 페이지
     page = request.GET.get('page', '1')
@@ -25,7 +24,7 @@ def index(request):
         'site_choice_list':{
             '사이트1':'내셔널지오그래픽',
             '사이트2':'코닥',
-            '사이트2':'스토어팜',
+            '사이트3':'스토어팜',
             },
         'page':page,
         '재고':'전체',
@@ -47,6 +46,7 @@ def searchFormView(request):
     site_choice_list = {}
     for i in range(len(사이트)):
         site_choice_list[f'사이트{i+1}'] = 사이트[i] 
+        
     def create_q_source(*args):
         source=Q()
         for value in args:
@@ -75,7 +75,7 @@ def searchFormView(request):
     
     # 페이지
     page = request.GET.get('page','1')
-    paginator = Paginator(product_list, 20)  # 페이지당 20개씩 보여주기
+    paginator = Paginator(product_list, 20)  # 페이지당 10개씩 보여주기
     page_obj = paginator.get_page(page)
     
     save_page={

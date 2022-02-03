@@ -35,7 +35,6 @@ def SearchFormView(request):
 
 def SaveProduct(request):
     form = Searchform()
-    data = request.POST
-    test = data.getlist('test_url',default=None)
-    national_save(test)
+    site_list = request.POST.getlist('pd_check[]')
+    national_save(site_list)
     return render(request,'crawling/index.html',{'form':form})

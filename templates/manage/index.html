@@ -2,10 +2,19 @@
 {% block content %}
 <!-- container -->
 <!-- 검색창 -->
+<script>
+    function selectAll(selectAll) {
+        const checkboxes = document.getElementsByName('pd_check[]');
+
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = selectAll.checked;
+        })
+    }
+</script>
+
 <div class="p-2" style="background-color:rgb(211, 211, 211)">
         <!-- {{form.as_p}} -->
         <form action="{% url 'manage:search' %}" method="GET" >
-            {% csrf_token %}
             <!-- {{form.as_p}} -->
     
             <!-- 사이트선택 -->
@@ -63,7 +72,7 @@
             </div>
         </form>
 </div>
-<!-- /////////////////////////////////////////////////////////////////////////////////////// 히든 서치 폼 ///////////////////////////////////////////////////////////////////////////////////////-->
+<!-- /////////////////////////////////////////////////////////////////////////////////////// 히든 서치 폼 -->
 
 <form id="searchForm" method="get" action="{% url 'manage:search' %}">
     <input type="hidden" id="search" name="search" value="{{ save_page.search|default_if_none:'' }}">
@@ -79,10 +88,12 @@
 <!-- container -->
 <div class="p-3">
     <!-- 전체선택창 -->
+    <form action="{% url 'update:postUpdate' %}" method="post">
+        {% csrf_token %}
     <div class="mb-2">
-        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+        <input class="form-check-input" type="checkbox" name="" value="selectall" onclick='selectAll(this)'>
         <span>전체선택</span>
-        <input class="btn btn-primary btn-sm ms-2" type="button" value="선택된 상품 업데이트">
+        <input class="btn btn-primary btn-sm ms-2" type="submit" value="선택된 상품 업데이트">
     </div>
     <!-- 상품 -->
     <div>
@@ -95,7 +106,7 @@
                     <tbody>
                         <!-- 번호 -->
                         <td style="background-color:rgb(224, 224, 224)">
-                            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                            <input class="form-check-input checkposition" type="checkbox" id="" name='pd_check[]' value="{{product.id}}">
                             <span class="badge bg-secondary me-1">No.</span>
                             <span>{{ product.id }}</span>
                         </td>
@@ -181,6 +192,7 @@
 <!-- 상품리스트끝 -->
 </ul>
 </div>
+</form>
 </div>
 
 

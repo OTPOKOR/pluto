@@ -3,7 +3,7 @@
 <!-- container -->
 <script>
     function selectAll(selectAll) {
-        const checkboxes = document.getElementsByName('pd_check');
+        const checkboxes = document.getElementsByName('pd_check[]');
 
         checkboxes.forEach((checkbox) => {
             checkbox.checked = selectAll.checked;
@@ -39,9 +39,9 @@
         </div>
     </div>
     <!-- 상품선택창 -->
-    <!-- 전체체크 -->
+    <!-- 전체선택창 -->
     <div class="form-check m-1">
-        <input class="form-check-input" name="pd_check" type="checkbox" value="selectall" id="flexCheckDefault"
+        <input class="form-check-input" name="pd_check[]" type="checkbox" value="selectall" id="flexCheckDefault"
             onclick='selectAll(this)'>
         <label class="form-check-label" for="flexCheckDefault">
             전체체크
@@ -54,16 +54,13 @@
             {% for product in getProductInfo%}
             <div class="col m-3">
                 <div class="card" style="width: 18rem;">
-                    <input class="form-check-input m-3" type="checkbox" name="pd_check" id="checkboxNoLabel" 
-                        aria-label="...">
+                    <input type="checkbox" class="form-check-input m-3"  name="pd_check[]" id="checkboxNoLabel" value="{{product.url}}">
                     <img src='{{product.product_image}}' class="card-img-top" alt="...">
                     <div class="card-body">
                         <ul class="list-group">
                             <li class="list-group-item">{{product.product_name}}</li>
                             <li class="list-group-item">{{product.product_number}}</li>
                             <li class="list-group-item">{{product.price}}</li>
-                            <li class="list-group-item">
-                                <input type="url" name="test_url" id="t_url" value="{{product.url}}">{{product.url}}</li>
                         </ul>
                     </div>
                 </div>
