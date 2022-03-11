@@ -1,0 +1,25 @@
+2022-02-25 21:59:13,711: INFO - load: Loading credential configuration file at: C:\Users\wldnj\Desktop\pluto\test\ebayOauth\test\config\ebay-config-sample.yaml
+2022-02-25 21:59:13,715: DEBUG - _iterate: Environment attempted: name
+2022-02-25 21:59:13,715: DEBUG - _iterate: Environment attempted: api.sandbox.ebay.com
+2022-02-25 21:59:13,715: DEBUG - _iterate: Environment attempted: api.ebay.com
+2022-02-25 21:59:13,715: INFO - get_application_token: Trying to get a new application access token ... 
+2022-02-25 21:59:13,721: DEBUG - _new_conn: Starting new HTTPS connection (1): api.ebay.com:443
+2022-02-25 21:59:14,440: DEBUG - _make_request: https://api.ebay.com:443 "POST /identity/v1/oauth2/token HTTP/1.1" 400 None
+2022-02-25 21:59:14,443: ERROR - get_application_token: Unable to retrieve token.  Status code: 400 - ('bad_request', 'bad')
+2022-02-25 21:59:14,443: ERROR - get_application_token: Error: invalid_scope - The requested scope is invalid, unknown, malformed, or exceeds the scope granted to the client
+2022-02-25 21:59:14,444: INFO - load: Loading credential configuration file at: C:\Users\wldnj\Desktop\pluto\test\ebayOauth\test\config\ebay-config-sample.yaml
+2022-02-25 21:59:14,446: DEBUG - _iterate: Environment attempted: name
+2022-02-25 21:59:14,446: DEBUG - _iterate: Environment attempted: api.sandbox.ebay.com
+2022-02-25 21:59:14,446: DEBUG - _iterate: Environment attempted: api.ebay.com
+2022-02-25 21:59:14,446: INFO - get_application_token: Trying to get a new application access token ... 
+2022-02-25 21:59:14,450: DEBUG - _new_conn: Starting new HTTPS connection (1): api.sandbox.ebay.com:443
+2022-02-25 21:59:15,666: DEBUG - _make_request: https://api.sandbox.ebay.com:443 "POST /identity/v1/oauth2/token HTTP/1.1" 200 None
+2022-02-25 21:59:15,671: INFO - load: Loading credential configuration file at: C:\Users\wldnj\Desktop\pluto\test\ebayOauth\test\config\ebay-config-sample.yaml
+2022-02-25 21:59:15,673: DEBUG - _iterate: Environment attempted: name
+2022-02-25 21:59:15,673: DEBUG - _iterate: Environment attempted: api.sandbox.ebay.com
+2022-02-25 21:59:15,674: DEBUG - _iterate: Environment attempted: api.ebay.com
+2022-02-25 21:59:15,674: INFO - get_application_token: Trying to get a new application access token ... 
+2022-02-25 21:59:15,676: DEBUG - _new_conn: Starting new HTTPS connection (1): api.sandbox.ebay.com:443
+2022-02-25 21:59:16,331: DEBUG - _make_request: https://api.sandbox.ebay.com:443 "POST /identity/v1/oauth2/token HTTP/1.1" 400 None
+2022-02-25 21:59:16,334: ERROR - get_application_token: Unable to retrieve token.  Status code: 400 - ('bad_request', 'bad')
+2022-02-25 21:59:16,334: ERROR - get_application_token: Error: invalid_scope - The requested scope is invalid, unknown, malformed, or exceeds the scope granted to the client

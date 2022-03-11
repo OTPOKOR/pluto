@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- container -->
+<!-- 검색창 -->
+<script>
+    function selectAll(selectAll) {
+        const checkboxes = document.getElementsByName('pd_check[]');
+
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = selectAll.checked;
+        })
+    }
+</script>
+
+<script>
+    function title_change(id,title_text){
+        let tagArea = document.getElementById('title_form'+id)
+        let new_input = document.createElement('input')
+        new_input.setAttribute('id',`change_${id}`)
+        new_input.setAttribute('value',`${title_text}`)
+        new_input.setAttribute('class','form-control')
+        tagArea.appendChild(new_input)
+        document.getElementById('title_button'+id).setAttribute('onclick',`send(${id})`)
+    }
+
+    function send(id){
+        getChangeValue =document.getElementById(`change_${id}`).value
+        url = 'http://127.0.0.1:8000/manage/'
+        location.replace(`${url}titleUpdate/?product_id=${id}&product_title=${getChangeValue}`)
+        console.log(id,getChangeValue)
+    }
+
+    function showEbayPopup(product_id) {
+        console.log(product_id)
+        window.open("{% url 'manage:policy'% product_id=''}", "a", "width=400, height=300, left=100, top=50"); }
+</script>
+
+<div class="p-2" style="background-color:rgb(211, 211, 211)">
+        <!-- {{form.as_p}} -->
+        <form action="{% url 'manage:product_list' %}" method="GET" >
+            <!-- {{form.as_p}} -->
+    
+            <!-- 사이트선택 -->
+    
+            <div>
+                <span class="fw-bold me-1">사이트선택</span>
+                <div class="form-check form-check-inline">
+    
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="사이트" value="내셔널지오그래픽">
+                    <label class="form-check-label" for="inlineCheckbox1">내셔널지오그래픽</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="사이트" value="코닥">
+                    <label class="form-check-label" for="inlineCheckbox2">코닥</label>
+                </div>
+    
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="사이트" value="네이버스토어팜">
+                    <label class="form-check-label" for="inlineCheckbox2">네이버스토어팜</label>
+                </div>
+            </div>
+            <!-- 상태창 -->
+            <span class="fw-bold me-5 ">상태</span>
+            <div class="form-check form-check-inline">
+    
+                <input class="form-check-input" type="radio" id="inlineCheckbox1" name="재고" value="전체" >
+                <label class="form-check-label" for="inlineCheckbox1">전체</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="inlineCheckbox2" name="재고" value="재고">
+                <label class="form-check-label" for="inlineCheckbox2">재고</label>
+            </div>
+    
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="inlineCheckbox2" name="재고" value="품절">
+                <label class="form-check-label" for="inlineCheckbox2">품절</label>
+            </div>
+    
+            <!-- 검색창 -->
+            <div class="justify-content-center">
+                <div class="input-group mb-3 mt-2 ">
+                    <span class="me-3 fw-bold">상품검색</span>
+    
+                    <select class="form-select form-control" data-bs-toggle="dropdown"  aria-label="Default select example" aria-expanded="false" style="width:20px" name="검색조건">
+                        <option selected>전체검색</option>
+                        <option value="식별번호">식별번호</option>
+                        <option value="상품번호">상품번호</option>
+                        <option value="제품이름">제품이름</option>
+                      </select>
+    
+                    <!-- 검색바 -->
+                    <input type="text" class="form-control" placeholder="상품검색" aria-label="Recipient's username" aria-describedby="button-addon2" style="width:75%" name="search">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2" >검색</button>
+                </div>
+            </div>
+        </form>
+</div>
+<!-- /////////////////////////////////////////////////////////////////////////////////////// 히든 서치 폼 -->
+
+<form id="searchForm" method="get" action="{% url 'manage:search' %}">
+    <input type="hidden" id="search" name="search" value="{{ save_page.search|default_if_none:'' }}">
+    <input type="hidden" id="site1" name="사이트" value= "{{save_page.site_choice_list.사이트1}}">
+    <input type="hidden" id="site2" name="사이트" value= "{{save_page.site_choice_list.사이트2}}">
+    <input type="hidden" id="site3" name="사이트" value= "{{save_page.site_choice_list.사이트3}}">
+    <input type="hidden" id="stock" name="재고" value= "{{save_page.재고}}">
+    <input type="hidden" id="page" name="page" value="{{ save_page.page }}">
+    <input type="hidden" id="search_condition" name="검색조건" value="{{ save_page.검색조건 }}">
+</form>
+
+<!-- 검색창 종료 -->
+<!-- container -->
+<div class="p-3">
+    <!-- 전체선택창 -->
+    <form action="{% url 'update:postUpdate' %}" method="post">
+        {% csrf_token %}
+    <div class="mb-2">
+        <input class="form-check-input" type="checkbox" name="" value="selectall" onclick='selectAll(this)'>
+        <span>전체선택</span>
+        <input class="btn btn-primary btn-sm ms-2" type="submit" value="선택된 상품 업데이트">
+    </div>
+    <!-- 상품 -->
+    <div>
+        <!-- 개별상품 -->
+        <ul style='list-style:none; padding:0px;'>
+            <!-- 상품리스트 시작 -->
+            {% for product in product_list %}
+            <li>
+                <table class="pdTable" style="width:100%">
+                    <tbody>
+                        <!-- 번호 -->
+                        <td style="background-color:rgb(224, 224, 224)">
+                            <input class="form-check-input checkposition" type="checkbox" id="" name='pd_check[]' value="{{product.id}}">
+                            <span class="badge bg-secondary me-1">No.</span>
+                            <span>{{ product.id }}</span>
+                        </td>
+                        <!-- 날짜,식별,상품 -->
+                        <td style="background-color:rgb(224, 224, 224)">
+                            <span class="badge bg-secondary me-1">등록날짜</span><span>{{product.regist_date}}</span>
+                            <span class="badge bg-secondary me-1">업데이트날짜</span><span>{{product.update_date}}</span>
+                            <span class="badge bg-secondary me-1">식별번호</span><span>{{product.identy_number}}</span>
+                            <span class="badge bg-secondary me-1">상품번호</span><span>{{product.product_number}}</span>
+                        </td>
+                    </tbody>
+                    <tbody>
+                        <!-- 상품이미지 -->
+                        <td class="pdImg"><img src="http://localhost:8080/img/{{product.product_number}}/0.jpg" alt="" style="width:200px;"/></td>
+                        <td>
+                            <table style="width:100%">
+                                <tr>
+                                    <span class="badge bg-secondary me-1">Title</span>
+                                    <span id='title_form{{product.id}}'>{{product.product_title}}  </span> 
+                                    <input id='title_button{{product.id}}' class="btn btn-primary btn-sm ms-2" type="button" value="수정하기" onclick="title_change('{{product.id}}','{{product.product_title}}')"></input>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-secondary me-1">사이트 </span><span>{{product.site}}</span>
+                                        <span class="badge bg-secondary me-1">브랜드 </span><span>{{product.brand}}</span>
+                                        <a href='{{product.product_url}}' target="_blank" onclick="window.open('{{product.product_url}}','popup','width=600,height=600'); " class="btn btn-primary btn-sm ms-2">url</a>
+                                        <input class="btn btn-primary btn-sm ms-2" type="button" value="개별업데이트">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-secondary me-1">제품이름</span><span>{{product.product_name}}</span>
+                                        {% if product.stock == True %}
+                                        <span class="badge bg-secondary ms-1 me-1">재고</span><span>입고</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary ms-1 me-1">재고</span><span style="color: red">품절</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-secondary me-1">정가</span><span>{{product.price}}</span>
+                                        <span class="badge bg-secondary me-1" >할인 가격</span><span>{{product.sale_price}}</span>
+                                        <span class="badge bg-secondary ms-1 me-1 ">배송비</span><span>{{product.shipping_price}}</span>
+                                        <!-- 합산가격은 나중에 -->
+                                        <span class="badge bg-secondary ms-1 me-1">합</span> <span>합산가격</span>
+                                        <!-- 합산가격은 나중에 끝 -->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-secondary me-1">무게</span> <span>{{product.weight}}</span>
+                                        <span class="badge bg-secondary me-1">부피무게</span>
+                                        <span>{{product.volume}}</span><input class="btn btn-primary btn-sm ms-2" type="button" value="수정">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-secondary me-1">정책</span>  <input class="btn btn-primary btn-sm ms-2" type="button" value="ebay" onclick="window.open('http://127.0.0.1:8000/manage/policy/?product_id={{product.id}}','popup','width=600,height=1200');"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="{{product.id}}">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{product.id}}" aria-expanded="false" aria-controls="flush-collapse{{product.id}}">
+                                                    옵션
+                                                </button>
+                                            </h2>
+                                            <div id="flush-collapse{{product.id}}" class="accordion-collapse collapse" aria-labelledby="{{product.id}}">
+                                                <div class="accordion-body">
+                                                    <ul class="list-group">
+                                                        {% comment %} _set 앞은 무조건 소문자만사용할것 {% endcomment %}
+                                                        {%for list in product.productoption_set.all %}
+                                                            <li class="list-group-item"> {{list.option}} 
+                                                                {% if list.stock == 0%}
+                                                                <span >품절</span>
+                                                                {% else %}
+                                                                {% endif %}
+                                                                <input
+                                                            class="btn btn-primary btn-sm" type="button" value="수정"
+                                                            style="float:right"><input
+                                                            class="btn btn-primary btn-sm me-2" type="button"
+                                                            value="복구" style="float:right"></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    
+    </div>
+</div>
+</td>
+</tr>
+</table>
+
+</td>
+</tbody>
+
+</table>
+</li>
+{% endfor %}
+<!-- 상품리스트끝 -->
+</ul>
+</div>
+</form>
+</div>
+
+
+<!-- 페이징 처리 시작 -->
+<ul class="pagination justify-content-center">
+    <!-- 이전페이지 -->
+    {% if product_list.has_previous %}
+    <li class="page-item">
+        <a class="page-link" data-page="{{ product_list.previous_page_number }}" href="#">이전</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+    </li>
+    {% endif %}
+    <!-- 페이지리스트 -->
+    {% for page_number in product_list.paginator.page_range %}
+    {% if product_list.number|add:-5 <= page_number <= product_list.number|add:5 %}
+        {% if page_number == product_list.number %}
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" data-page="{{ page_number }}" href="#">{{ page_number }}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" data-page="{{ page_number }}" href="#">{{ page_number }}</a>
+        </li>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
+    <!-- 다음페이지 -->
+    {% if product_list.has_next %}
+    <li class="page-item">
+        <a class="page-link" data-page="{{ product_list.next_page_number }}" href="#">다음</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+    </li>
+    {% endif %}
+</ul>
+<!-- 페이징 처리 끝 -->
+</div> 
+
+{% if is_paginated %}
+<ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+        <a class="page-link" href="?사이트={{ 사이트 }}&재고={{ 재고 }}&q={{ q }}&page={{ page_obj.previous_page_number }}"
+            tabindex="-1">이전</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1">이전</a>
+    </li>
+    {% endif %}
+
+    {% for page in page_range %}
+    <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
+        <a class="page-link" href="?사이트={{ 사이트 }}&사이트={{ 사이트 }}&사이트={{ 사이트 }}&재고={{ 재고 }}&q={{ q }}&page={{ page }}">{{ page }}</a>
+    </li>
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <li class="page-item">
+        <a class="page-link"
+            href="?사이트={{ 사이트 }}&재고={{ 재고 }}&q={{ q }}&page={{ page_obj.next_page_number }}">다음</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <a class="page-link" href="#">다음</a>
+    </li>
+    {% endif %}
+</ul>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+{% block javascripts %}
+<script type='text/javascript'>
+$(document).ready(function(){
+    $(".page-link").on('click', function() {
+        $("#page").val($(this).data("page"));
+        $("#searchForm").submit();
+    });
+
+});
+</script>
+{% endblock %}
+
+
+{% endblock %}
+
+

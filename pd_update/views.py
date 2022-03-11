@@ -1,12 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from product.models import Product
-
+from pd_crawling.crawling_site.national import national_update
 # 페이징 처리
 from django.core.paginator import Paginator,EmptyPage, PageNotAnInteger
 
 # db모델 검색기능 'Q'
 from django.db.models import Q
 
+# 이베이 업로드
+from .ebay_upload.upload import *
+# 리프레쉬 테스트
+from .ebay_upload.refresh import *
 def index(request):
     """
     목록출력
@@ -89,9 +93,37 @@ def postUpdate(request):
         # 다중 검색 필터 
         q_objects = Q(id__in=[])
         for item in selected:
-            print(item)
             q_objects.add(Q(id=item),Q.OR)
         
         product_list = Product.objects.filter(q_objects).order_by('-regist_date')
     return render(request,'update/index.html',{'product_list':product_list})
-        
+
+def update(request):
+    if request.method == 'POST':
+        test = request.POST.getlist('pd_check[]')
+    if request.method == "GET":
+        if request.GET.get('선택'):
+            selected = request.GET.getlist('pd_check[]')
+            for item in selected:
+                id_find = Product.objects.filter(Q(id=item))
+                url = id_find.values()[0]['product_url']
+                if 'naturestore' in url:
+                    national_update(id_find,url)
+        elif request.GET.get('이베이'):
+            getInventoryItems()
+            # selected = request.GET.getlist('pd_check[]')
+            # for i in selected:
+            #     # 이미지가 저장되지않으면 계속생성해야함 DB에 저장하는게 좋을거같음
+            #     a = UploadingEbay(i)
+            #     image_upload_list = a.image_upload()
+            #     a.createOrReplaceInventoryItem(image_upload_list)
+            #     a.createOffer()
+            #     a.createOrReplaceInventoryItemGroup(image_upload_list)
+            #     a.publishOfferByInventoryItemGroup()
+        else :
+            print('전체상품업데이트')
+    return render(request,'update/index.html')
+
+def refresh(request):
+    refresh_tokken()
+    return render(request,'update/test.html')

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<script>
+    function OnChange(id) {
+        if (id == "0") {
+            location.replace(`http://127.0.0.1:8000/policy/`)
+        } else {
+            location.replace(`http://127.0.0.1:8000/policy/?category_id=${id}`)
+        }
+    }
+</script>
+<div class="mb-3 justify-content-center">
+    <div class="col-sm-9 bg-light p-3 border">
+        <select class="form-select" name="category" onchange="OnChange(this.value);">
+            <option value="0">새로만들기</option>
+            {% for category in categories %}
+            {% if category.id == selected_category.id %}
+            <option selected value="{{category.id}}">{{category.category_name}}</option>
+            {% else %}
+            <option value="{{category.id}}">{{category.category_name}}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3 bg-white border">
+        <form action="{% url 'policy:index'%}" method="POST">
+            {% csrf_token %}
+            <input type="text" name="category_id" id="" value="{{selected_category.id}}" style="display:none">
+            <input class="form-control" type="text" name="category_name"
+                value="{{selected_category.category_name|default:''}}" id="" placeholder="제목입력">
+            <span class="badge bg-primary">Required_Spec</span>
+                {% for req_spec_name in req_spec_names %}
+                    <input class="form-control" type="text" name="req_spec_name" value="{{req_spec_name.spec_name}}"
+                        id="{{req_spec_name.id}}" placeholder="내용입력" required>
+                {% endfor %}
+                <input class="form-control" type="text" name="req_spec_name" value="" id=""
+                    placeholder="내용입력" required>
+                <input class="btn btn-primary col-auto" type="submit" value="추가하기" >
+            <input class="btn btn-primary " type="submit" value="등록">
+            <!-- Required_Spec -->
+
+        </form>
+    </div>
+</div>
+{% endblock %}

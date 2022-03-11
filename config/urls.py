@@ -22,4 +22,6 @@ urlpatterns = [
     path('crawling/',include('pd_crawling.urls')),
     path('manage/', include('pd_manage.urls')),
     path('update/', include('pd_update.urls')),
+    path('policy/',include('pd_policy.urls')),
+    path('summernote/', include('django_summernote.urls')),
 ]

@@ -12,6 +12,31 @@
     }
 </script>
 
+<script>
+    function title_change(id,title_text){
+        let tagArea = document.getElementById('title_form'+id)
+        let new_input = document.createElement('input')
+        new_input.setAttribute('id',`change_${id}`)
+        new_input.setAttribute('value',`${title_text}`)
+        new_input.setAttribute('class','form-control')
+        tagArea.appendChild(new_input)
+        document.getElementById('title_button'+id).setAttribute('onclick',`send(${id})`)
+    }
+
+    function send(id){
+        getChangeValue =document.getElementById(`change_${id}`).value
+        url = 'http://127.0.0.1:8000/manage/'
+        location.replace(`${url}titleUpdate/?product_id=${id}&product_title=${getChangeValue}`)
+        console.log(id,getChangeValue)
+    }
+
+    function showEbayPopup(product_id) {
+        console.log(product_id)
+        window.open("{% url 'manage:policy'% product_id=''}", "a", "width=1200, height=800, left=100, top=50"); }
+    function OnChange(productId,policyId){
+    }
+</script>
+
 <div class="p-2" style="background-color:rgb(211, 211, 211)">
         <!-- {{form.as_p}} -->
         <form action="{% url 'manage:search' %}" method="GET" >
@@ -120,9 +145,14 @@
                     </tbody>
                     <tbody>
                         <!-- 상품이미지 -->
-                        <td class="pdImg"><img src="http://localhost:8080/img/{{product.product_number}}/01.jpg" alt="" style="width:200px;"/></td>
+                        <td class="pdImg"><img src="http://localhost:8080/img/{{product.product_number}}/0.jpg" alt="" style="width:200px;"/></td>
                         <td>
                             <table style="width:100%">
+                                <tr>
+                                    <span class="badge bg-secondary me-1">Title</span>
+                                    <span id='title_form{{product.id}}'>{{product.product_title}}  </span> 
+                                    <input id='title_button{{product.id}}' class="btn btn-primary btn-sm ms-2" type="button" value="수정하기" onclick="title_change('{{product.id}}','{{product.product_title}}')"></input>
+                                </tr>
                                 <tr>
                                     <td>
                                         <span class="badge bg-secondary me-1">사이트 </span><span>{{product.site}}</span>
@@ -143,7 +173,8 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="badge bg-secondary me-1">가격</span><span>{{product.price}}</span>
+                                        <span class="badge bg-secondary me-1">정가</span><span>{{product.price}}</span>
+                                        <span class="badge bg-secondary me-1" >할인 가격</span><span>{{product.sale_price}}</span>
                                         <span class="badge bg-secondary ms-1 me-1 ">배송비</span><span>{{product.shipping_price}}</span>
                                         <!-- 합산가격은 나중에 -->
                                         <span class="badge bg-secondary ms-1 me-1">합</span> <span>합산가격</span>
@@ -159,6 +190,26 @@
                                 </tr>
                                 <tr>
                                     <td>
+                                        <span class="badge bg-secondary me-1">정책</span>  <input class="btn btn-primary btn-sm ms-2" type="button" value="ebay" onclick="window.open('http://127.0.0.1:8000/manage/policy/?product_id={{product.id}}','popup','width=600,height=1200');"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <select class="form-select" id ="{{product.id}}"onchange = "OnChange(this.id,this.value)">
+                                            <!-- <option selected>Open this select menu</option> -->
+                                            <option value="0">선택되지않음</option>
+                                            {% for item_category in item_categories %}
+                                            {% if category.id == product.policy_number %}
+                                            <option selected value="{{item_category.id}}">{{item_category.category_name}}</option>
+                                            {% else %}
+                                            <option value="{{item_category.id}}">{{item_category.category_name}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                          </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         <div class="accordion-item">
                                             <h2 class="accordion-header" id="{{product.id}}">
                                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{product.id}}" aria-expanded="false" aria-controls="flush-collapse{{product.id}}">
@@ -168,8 +219,14 @@
                                             <div id="flush-collapse{{product.id}}" class="accordion-collapse collapse" aria-labelledby="{{product.id}}">
                                                 <div class="accordion-body">
                                                     <ul class="list-group">
-                                                        {%for list in product.option %}
-                                                            <li class="list-group-item"> {{list}}<input
+                                                        {% comment %} _set 앞은 무조건 소문자만사용할것 {% endcomment %}
+                                                        {%for list in product.productoption_set.all %}
+                                                            <li class="list-group-item"> {{list.option}} 
+                                                                {% if list.stock == 0%}
+                                                                <span >품절</span>
+                                                                {% else %}
+                                                                {% endif %}
+                                                                <input
                                                             class="btn btn-primary btn-sm" type="button" value="수정"
                                                             style="float:right"><input
                                                             class="btn btn-primary btn-sm me-2" type="button"

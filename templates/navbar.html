@@ -24,5 +24,12 @@
         {% else %}
             <a href="{% url 'update:index' %}" class="btn btn-primary">업데이트</a>
         {% endif %}
+
+        <!-- 정책 -->
+        {% if request.path == '/policy/' %}
+            <a href="{% url 'policy:index' %}" class="btn btn-primary active aria-current=">정책</a>
+        {% else %}
+            <a href="{% url 'policy:index' %}" class="btn btn-primary">정책</a>
+        {% endif %}
     </div>
 </div>
